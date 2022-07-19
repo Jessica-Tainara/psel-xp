@@ -21,4 +21,11 @@ assetRouter.get('/:id', async (req, res) => {
     return res.status(200).json(response);
 });
 
+assetRouter.get('/conta/:id', async (req, res) => {
+    const { id } = req.params;
+    console.log(id)
+    const response = await serviceAsset.getByClient(id);
+    return res.status(200).json(response);
+});
+
 module.exports = assetRouter;
