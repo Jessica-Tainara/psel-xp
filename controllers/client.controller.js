@@ -8,4 +8,9 @@ clientRouter.post('/deposito', async (req, res) => {
     return res.status(201).json(response);
 });
 
+clientRouter.post('/saque', async (req, res) => {
+    const response = await serviceClient.withdraw(req.body);
+    return res.status(201).json(response);
+});
+
 module.exports = clientRouter;
