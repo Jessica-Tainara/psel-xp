@@ -1,7 +1,7 @@
 const Account = (sequelize, DataTypes)=> {
   const accountTable = sequelize.define("Account", {
     clientId: DataTypes.INTEGER,
-    balance: DataTypes.DECIMAL
+    balance: DataTypes.DECIMAL(10,2)
   }, {
       timestamps: false,
      })

@@ -2,7 +2,8 @@ const History = (sequelize, DataTypes)=> {
   const historyTable = sequelize.define("History", {
     accountId: DataTypes.INTEGER,
     transaction: DataTypes.STRING,
-    value: DataTypes.DECIMAL
+    value: DataTypes.DECIMAL(10,2),
+    details: DataTypes.STRING
   }, {
       timestamps: false,
      })
