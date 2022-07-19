@@ -63,4 +63,26 @@ const buy = async (object) => {
   }
 };
 
-module.exports = { buy }; 
+const sell = async (object) => {
+  const { total, balance, purchasedAssets, accountId} = await prevInfos(object);
+  const { qtdeAtivo } = object;
+    console.log(purchasedAssets, qtdeAtivo)
+  if(purchasedAssets < qtdeAtivo) throw customError(200, "Quantidade de ativos indisponível");
+  const t = await sequelize.transaction();
+  const newBalance = balance + total;
+  const newPurchasedAssets = purchasedAssets - qtdeAtivo;
+
+  try{
+    await runTransactions(t, {...object, newBalance, total, purchasedAssets, 
+        newPurchasedAssets, transaction : 'Venda de ativos', accountId });
+  await t.commit();
+  return { message: 'Venda finalizada com sucesso!' };
+
+  } catch(e){
+    await t.rollback();
+    console.log(e.message);
+    throw customError(200, 'Não foi possível finalizar a transação');
+  }
+};
+
+module.exports = { buy, sell }; 
