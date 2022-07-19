@@ -19,5 +19,10 @@ clientRouter.get('/:id', async (req, res) => {
     return res.status(200).json(response);
 });
 
+clientRouter.get('/historico/:id', async (req, res) => {
+    const { id } = req.params;
+    const response = await serviceClient.history(id);
+    return res.status(200).json(response);
+});
 
 module.exports = clientRouter;
