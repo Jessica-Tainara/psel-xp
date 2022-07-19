@@ -13,4 +13,11 @@ clientRouter.post('/saque', async (req, res) => {
     return res.status(201).json(response);
 });
 
+clientRouter.get('/:id', async (req, res) => {
+    const { id } = req.params;
+    const response = await serviceClient.balance(id);
+    return res.status(200).json(response);
+});
+
+
 module.exports = clientRouter;
