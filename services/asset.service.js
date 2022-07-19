@@ -85,4 +85,28 @@ const sell = async (object) => {
   }
 };
 
-module.exports = { buy, sell }; 
+const getById = async (assetId) => {
+
+  const asset = await Asset.findByPk(assetId, {
+    attributes: [['id', 'codAtivo'],['name', 'nomeAtivo'], ['qtd', 'qtdeAtivo'], ['price', 'valor'] ]
+  });
+ 
+  if(!asset)  throw customError(404, "Ativo não encontrado!");
+  return asset;
+};
+
+const getByClient = async (clientId) => {
+  const { id: accountId = 0 } = await Account.findOne({ where: { clientId } }) || {};
+  const buy = await BuyingAsset.findAll({ where: { accountId } });
+  const result = await Promise.all(buy.map(async({dataValues})=> {
+  const assets =  await Asset.findByPk(dataValues.assetId,{
+    attributes: [['id', 'codAtivo'],['name', 'nomeAtivo'], ['price', 'valor'] ]
+})
+  return {...assets.dataValues, qtdeAtivo: dataValues.qtd };
+
+  }))
+  if(!buy.length)  throw customError(404, "Esse cliente não possui ativos");
+  return result;
+};
+
+module.exports = { buy, sell, getById, getByClient }; 
