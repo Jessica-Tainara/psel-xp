@@ -9,4 +9,9 @@ assetRouter.post('/comprar', validateAsset, async (req, res) => {
     return res.status(201).json(response);
 });
 
+assetRouter.post('/vender', validateAsset,  async (req, res) => {
+    const response = await serviceAsset.sell(req.body);
+    return res.status(201).json(response);
+});
+
 module.exports = assetRouter;
