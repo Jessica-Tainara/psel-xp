@@ -14,4 +14,11 @@ assetRouter.post('/vender', validateAsset,  async (req, res) => {
     return res.status(201).json(response);
 });
 
+
+assetRouter.get('/:id', async (req, res) => {
+    const { id } = req.params;
+    const response = await serviceAsset.getById(id);
+    return res.status(200).json(response);
+});
+
 module.exports = assetRouter;
