@@ -54,15 +54,15 @@ const withdraw = async ({ codCliente: clientId, valor}) => {
 };
   
 const balance = async (clientId) => {
-  const { balance:saldo, id: conta } = await Account.findOne({ where: { clientId } });
-    return { codCliente: clientId, conta, saldo };
+  const { balance:saldo } = await Account.findOne({ where: { clientId } });
+    return { codCliente: clientId, saldo };
 };
   
 const history = async (clientId) => {
   const { id: accountId } = await Account.findOne({ where: { clientId } });
 
   const history = await History.findAll({ where: { accountId }, attributes: [
-    ['id', 'codTransacao'],['accountId', 'conta'], ['transaction', 'tipoTransacao'], 
+    ['id', 'codTransacao'], ['transaction', 'tipoTransacao'], 
     ['value', 'valor'], ['details', 'detalhes'] ] });
   
   history.forEach(({ dataValues })=> {
