@@ -1,6 +1,8 @@
 const Sequelize = require('sequelize');
 const { Account, History, Client } = require('../models');
-const customError = require('../error/customError');
+const customError = require('../utils/customError');
+const isAuthorized = require('../utils/isAuthorized');
+const authService = require('./auth.service');
 const config = require('../config/config');
 
 const sequelize = new Sequelize(config.development);
@@ -28,7 +30,8 @@ const deposit = async ({ codCliente: clientId, valor}) => {
   }
 };
 
-const withdraw = async ({ codCliente: clientId, valor}) => {
+const withdraw = async ({ codCliente: clientId, valor}, { email }) => {
+  await isAuthorized(email, clientId);
   const { balance, id: accountId } = await Account.findOne({ where: { clientId } });
   
   if(balance < valor) throw customError(200, "Saldo insuficiente");
@@ -53,12 +56,14 @@ const withdraw = async ({ codCliente: clientId, valor}) => {
   }
 };
   
-const balance = async (clientId) => {
+const balance = async (clientId, { email }) => {
+  await isAuthorized(email, clientId);
   const { balance:saldo } = await Account.findOne({ where: { clientId } });
     return { codCliente: clientId, saldo };
 };
   
-const history = async (clientId) => {
+const history = async (clientId, { email }) => {
+  await isAuthorized(email, clientId);
   const { id: accountId } = await Account.findOne({ where: { clientId } });
 
   const history = await History.findAll({ where: { accountId }, attributes: [
@@ -80,13 +85,14 @@ const register = async({ fullName, email, password }) => {
   const t = await sequelize.transaction();
 
   try{
-    const { id: clientId } = await Client.create({ fullName, email, password }, 
-      { transaction: t });
+    const { id: clientId } = await Client
+      .create({ fullName, email, password: String(password) }, { transaction: t });
     const { clientId: codCliente, balance: saldo } = await Account
       .create({ clientId, balance: 0.00} , { transaction: t });
 
     await t.commit();
-    return { codCliente, saldo };
+    const token = await authService.authentication({ email, password });
+    return { codCliente, saldo, token };
   } catch(e){
     await t.rollback();
     console.log(e.message);

@@ -1,82 +1,47 @@
 const Sequelize = require('sequelize');
-const { BuyingAsset, Asset, Account, History } = require('../models');
-const customError = require('../error/customError');
+const { BuyingAsset, Asset, Account, Client } = require('../models');
+const customError = require('../utils/customError');
+const { prevInfos, runTransactions } = require('../utils/infosAndTransactions');
+const isAuthorized = require('../utils/isAuthorized')
 
 const config = require('../config/config');
 
 const sequelize = new Sequelize(config.development);
 
-const prevInfos = async(object) => {
-    const { codAtivo: assetId, codCliente: clientId, qtdeAtivo } = object;
-    const { price, qtd } = await Asset.findByPk(assetId);
-    const { balance, id: accountId } = await Account.findOne({ where: { clientId } });
-    const total = price * qtdeAtivo;
+const buy = async ({ codCliente, codAtivo, qtdeAtivo }, { email }) => {
+  await isAuthorized(email, codCliente);
+  const infos = await prevInfos({ codCliente, codAtivo, qtdeAtivo }, true);
 
-    const { qtd:purchasedAssets = 0 } = await BuyingAsset
-      .findOne({ where: { accountId, assetId } }) || {};
+  if(infos.newAvailableAssets < 0) throw customError(200, 
+    `Quantidade de ativos disponível: ${infos.availableAssets}`);
+  if(infos.newBalance < 0) throw customError(200, "Saldo insuficiente");
 
-      return { accountId, total, balance: Number(balance), purchasedAssets, prevAssets: qtd }
-}
-
-const runTransactions = async(t, infos) => {
-  const { codCliente: clientId, codAtivo: assetId, qtdeAtivo, newBalance, 
-    total, purchasedAssets, newPurchasedAssets, transaction, accountId} = infos;
-
-  await Account.update({ balance: newBalance }, { where: { clientId: clientId }},
-    { transaction: t });
-    
-  const details = JSON.stringify({ assetId, qtdeAtivo })
-    await History.create({ accountId, transaction, value: total, details }, 
-      { transaction: t });
-
-  if(purchasedAssets){
-    await BuyingAsset.update({ qtd: newPurchasedAssets }, { where: { accountId, assetId } }, 
-      { transaction: t });
-  } else{
-    await BuyingAsset.create({ accountId, assetId, qtd: qtdeAtivo },{ transaction: t });
-  }
-}
-
-const buy = async (object) => {
-    const { total, balance, prevAssets, purchasedAssets,accountId } = await prevInfos(object);
-    const { qtdeAtivo, codAtivo: assetId } = object;
-    if(prevAssets < qtdeAtivo) throw customError(200, "Quantidade de ativos indisponível");
-    if(balance < total) throw customError(200, "Saldo insuficiente");
-
-    const newBalance = balance - total;
-    const newPurchasedAssets = purchasedAssets + qtdeAtivo
-
-    const t = await sequelize.transaction();
+  const t = await sequelize.transaction();
 
   try{
-    await Asset.update({qtd: prevAssets - qtdeAtivo}, { where: { id: assetId } }, 
-    { transaction: t })
-    await runTransactions(t, {...object, newBalance, total, purchasedAssets, 
-        newPurchasedAssets, prevAssets, transaction: 'Compra de ativos', accountId });
+    await Asset.update({ qtd: infos.newAvailableAssets }, { where: { id: codAtivo } }, 
+      { transaction: t })
+    await runTransactions(t, {...infos ,codCliente, codAtivo, qtdeAtivo, transaction: 'Compra de ativos' });
     await t.commit();
     return { message: 'Compra finalizada com sucesso!' };
-
   } catch(e){
     await t.rollback();
     console.log(e.message);
-     throw customError(200, 'Não foi possível finalizar a transação' );
+    throw customError(200, 'Não foi possível finalizar a transação' );
   }
 };
 
-const sell = async (object) => {
-  const { total, balance, purchasedAssets, accountId} = await prevInfos(object);
-  const { qtdeAtivo } = object;
-    console.log(purchasedAssets, qtdeAtivo)
-  if(purchasedAssets < qtdeAtivo) throw customError(200, "Quantidade de ativos indisponível");
+const sell = async (object, { email }) => {
+  await isAuthorized(email, object.codCliente);
+  const infos = await prevInfos(object, false);
+
+  if(infos.newPurchasedAssets < 0) throw customError(200, `Quantidade disponível desse ativo para venda: ${infos.purchasedAssets}`);
   const t = await sequelize.transaction();
-  const newBalance = balance + total;
-  const newPurchasedAssets = purchasedAssets - qtdeAtivo;
 
   try{
-    await runTransactions(t, {...object, newBalance, total, purchasedAssets, 
-        newPurchasedAssets, transaction : 'Venda de ativos', accountId });
-  await t.commit();
-  return { message: 'Venda finalizada com sucesso!' };
+    await runTransactions(t, {...object, ...infos, transaction : 'Venda de ativos' });
+    await t.commit();
+    return { message: 'Venda finalizada com sucesso!' };
 
   } catch(e){
     await t.rollback();
@@ -85,28 +50,40 @@ const sell = async (object) => {
   }
 };
 
-const getById = async (assetId) => {
+const getAll = async () => {
+  const assets = await Asset.findAll({
+    attributes: [['id', 'codAtivo'],['name', 'ativo'], 
+      ['qtd', 'qtdeAtivo'], ['price', 'valor'] ]});
+ 
+  return assets;
+};
 
+const getById = async (assetId) => {
   const asset = await Asset.findByPk(assetId, {
-    attributes: [['id', 'codAtivo'],['name', 'nomeAtivo'], ['qtd', 'qtdeAtivo'], ['price', 'valor'] ]
+    attributes: [['id', 'codAtivo'],['name', 'ativo'], 
+      ['qtd', 'qtdeAtivo'], ['price', 'valor'] ]
   });
  
   if(!asset)  throw customError(404, "Ativo não encontrado!");
   return asset;
 };
 
-const getByClient = async (clientId) => {
+const getByClient = async (clientId, { email }) => {
+  await isAuthorized(email, clientId);
   const { id: accountId = 0 } = await Account.findOne({ where: { clientId } }) || {};
-  const buy = await BuyingAsset.findAll({ where: { accountId } });
-  const result = await Promise.all(buy.map(async({dataValues})=> {
-  const assets =  await Asset.findByPk(dataValues.assetId,{
-    attributes: [['id', 'codAtivo'],['name', 'nomeAtivo'], ['price', 'valor'] ]
-})
-  return {...assets.dataValues, qtdeAtivo: dataValues.qtd };
+  const purchasedAssets = await BuyingAsset.findAll({ where: { accountId } });
 
-  }))
-  if(!buy.length)  throw customError(404, "Esse cliente não possui ativos");
+  if(!purchasedAssets.length) throw customError(404, "Esse cliente não possui ativos");
+
+  const result = await Promise.all(purchasedAssets.map(async({ dataValues })=> {
+  
+    const assets =  await Asset.findByPk(dataValues.assetId,{
+      attributes: [['id', 'codAtivo'],['name', 'nomeAtivo'], ['price', 'valor'] ]});
+  
+    return {...assets.dataValues, qtdeAtivo: dataValues.qtd };
+  }));
+
   return result;
 };
 
-module.exports = { buy, sell, getById, getByClient }; 
+module.exports = { buy, sell, getById, getByClient, getAll }; 
