@@ -19,15 +19,6 @@ module.exports = {
       },
       balance: {
         type: Sequelize.DECIMAL(10,2)
-      },
-      createdAt: {
-        allowNull: false,
-        type: Sequelize.DATE
-      },
-      updatedAt: {
-        allowNull: false,
-        defaultValue: Sequelize.fn('now'),
-        type: Sequelize.DATE
       }
     });
   },

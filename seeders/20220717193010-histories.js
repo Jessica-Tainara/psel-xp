@@ -5,13 +5,13 @@ module.exports = {
   [
     {
       accountId: 1,
-      transaction: 'deposit',
+      transaction: 'Depósito',
       value: 3000.00,
       createdAt: Sequelize.literal('CURRENT_TIMESTAMP'),
     },
     {
       accountId: 2,
-      transaction: 'deposit',
+      transaction: 'Depósito',
       value: 4600.00,
       createdAt: Sequelize.literal('CURRENT_TIMESTAMP'),
     },

@@ -7,22 +7,61 @@ module.exports = {
       name: 'JTSA',
       qtd: 100,
       price: 70.00,
-      createdAt: Sequelize.literal('CURRENT_TIMESTAMP'),
-      updatedAt: Sequelize.literal('CURRENT_TIMESTAMP'),
     },
     {
       name: 'PVSA',
       qtd: 100.00,
       price: 75,
-      createdAt: Sequelize.literal('CURRENT_TIMESTAMP'),
-      updatedAt: Sequelize.literal('CURRENT_TIMESTAMP'),
     },
     {
       name: 'SCSA',
       qtd: 120,
       price: 84.50,
-      createdAt: Sequelize.literal('CURRENT_TIMESTAMP'),
-      updatedAt: Sequelize.literal('CURRENT_TIMESTAMP'),
+    },
+    {
+      name: 'JETS',
+      qtd: 100,
+      price: 70.00,
+    },
+    {
+      name: 'VVSA',
+      qtd: 100.00,
+      price: 75,
+    },
+    {
+      name: 'PSFA',
+      qtd: 120,
+      price: 84.50,
+    },
+    {
+      name: 'ACSA',
+      qtd: 100,
+      price: 70.00,
+    },
+    {
+      name: 'SLOS',
+      qtd: 100.00,
+      price: 75,
+    },
+    {
+      name: 'JOLS',
+      qtd: 120,
+      price: 84.50,
+    },
+    {
+      name: 'ABSA',
+      qtd: 100,
+      price: 70.00,
+    },
+    {
+      name: 'JCER',
+      qtd: 100.00,
+      price: 75,
+    },
+    {
+      name: 'OCMP',
+      qtd: 120,
+      price: 84.50,
     },
   ], {}),
 
