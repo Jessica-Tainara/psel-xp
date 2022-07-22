@@ -13,23 +13,19 @@ const deposit = async ({ codCliente: clientId, valor }) => {
   const t = await sequelize.transaction();
 
   try {
-    await Account.update({
-      balance: Number(balance) + valor
-    }, {
-      where: {
-        id: accountId
-      }
-    }, {transaction: t});
+    await Account.update({ balance: Number(balance) + valor}, { where: { id: accountId } },
+      { transaction: t });
 
     await History.create({
       accountId,
       transaction: 'Depósito',
-      value: valor
-    }, {transaction: t});
+      value: valor,
+      details: ''
+    }, { transaction: t });
 
     await t.commit();
 
-    return {message: 'Depósito finalizado com sucesso!'};
+    return { message: 'Depósito finalizado com sucesso!' };
 
   } catch (e) {
     await t.rollback();
@@ -40,7 +36,7 @@ const deposit = async ({ codCliente: clientId, valor }) => {
 
 const withdraw = async ({ codCliente: clientId, valor }, { email }) => {
   await isAuthorized(email, clientId);
-  const {balance, id: accountId} = await Account.findOne({ where: { clientId }});
+  const { balance, id: accountId } = await Account.findOne({ where: { clientId } });
 
   if (balance < valor) 
     throw customError(200, "Saldo insuficiente");
@@ -48,13 +44,8 @@ const withdraw = async ({ codCliente: clientId, valor }, { email }) => {
   const t = await sequelize.transaction();
 
   try {
-    await Account.update({
-      balance: Number(balance) - valor
-    }, {
-      where: {
-        id: accountId
-      }
-    }, {transaction: t});
+    await Account.update({ balance: Number(balance) - valor }, { where: { id: accountId } },
+      {transaction: t});
 
     await History.create({
       accountId,
@@ -65,7 +56,7 @@ const withdraw = async ({ codCliente: clientId, valor }, { email }) => {
 
     await t.commit();
 
-    return {message: 'Saque finalizado com sucesso!'};
+    return { message: 'Saque finalizado com sucesso!' };
 
   } catch (e) {
     await t.rollback();
@@ -93,10 +84,10 @@ const history = async (clientId, { email }) => {
     ]
   });
 
-  history.forEach(({dataValues}) => {
-    if (dataValues.detalhes) {
-      const {assetId: codAtivo, qtdeAtivo} = JSON.parse(dataValues.detalhes);
-      dataValues.detalhes = {
+  history.forEach((item) => {
+    if (item.detalhes) {
+      const { assetId: codAtivo, qtdeAtivo } = JSON.parse(item.detalhes);
+      item.detalhes = {
         codAtivo,
         qtdeAtivo
       };
@@ -115,7 +106,7 @@ const register = async ({ fullName, email, password }) => {
       fullName,
       email,
       password: String(password)
-    }, {transaction: t});
+    }, { transaction: t });
     const { balance: saldo } = await Account.create({
       codCliente,
       balance: 0.00

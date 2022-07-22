@@ -1,27 +1,27 @@
 const { Client } = require('../models');
-
+const customError = require('../utils/customError');
 const { generateJWTToken } = require('../utils/JWTtoken');
 
 authentication = async ({ email, password }) => {
-    if (!email || !password) {
-        return { status: 400, message: 'Some required fields are missing' };
+  if (!email || !password) 
+    throw customError(400, 'Some required fields are missing');
+
+  const client = await Client.findOne({
+    attributes: ['fullName', 'email'],
+    where: {
+      email,
+      password
     }
+  });
 
-    const user2 = await Client.findOne({
-        attributes: ['fullName', 'email'],
-        where: { email, password },
-    });
+  if (!client) 
+    throw customError(400, 'Invalid  fields');
 
-    if (!user2) {
-        return { status: 400, message: 'Invalid fields' };
-    }
+  const token = generateJWTToken(client);
 
-    const token = generateJWTToken(user2.dataValues);
-    console.log(token);
-
-    return token;
+  return token;
 };
 
 module.exports = {
-    authentication,
+  authentication
 };
