@@ -113,7 +113,7 @@ const register = async ({ fullName, email, password }) => {
     }, { transaction: t });
 
     await t.commit();
-    const token = await authService.authentication({ email, password });
+    const { token } = await authService.authentication({ email, password });
     return { codCliente, saldo, token };
   } catch (e) {
     await t.rollback();

@@ -11,8 +11,8 @@ authController.post('/registrar', validateRegister, async (req, res) => {
 });
 
 authController.post('/entrar', async (req, res) => {
-  const token = await serviceAuth.authentication(req.body);
-  return res.status(201).json({ token });
+  const response = await serviceAuth.authentication(req.body);
+  return res.status(201).json(response);
 });
 
 module.exports = authController;

@@ -7,7 +7,7 @@ authentication = async ({ email, password }) => {
     throw customError(400, 'Some required fields are missing');
 
   const client = await Client.findOne({
-    attributes: ['fullName', 'email'],
+    attributes: ['fullName', 'email', 'id'],
     where: {
       email,
       password
@@ -17,9 +17,12 @@ authentication = async ({ email, password }) => {
   if (!client) 
     throw customError(400, 'Invalid  fields');
 
-  const token = generateJWTToken(client);
+  const token = generateJWTToken({
+    email: client.email,
+    fullName: client.fullName
+  });
 
-  return token;
+  return { codCliente: client.id, token };
 };
 
 module.exports = {
