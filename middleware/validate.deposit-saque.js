@@ -1,7 +1,7 @@
 const customError = require('../utils/customError');
 
 module.exports = (req, _res, next) => {
-  const { codCliente, valor } = req.body;
+  const { codCliente = '', valor = '' } = req.body;
   const errors = [
     [400, '"codCliente" is required'],
     [422, '"codCliente" must be a number'],
@@ -12,10 +12,10 @@ module.exports = (req, _res, next) => {
   ];
 
   const index = [
-    codCliente === undefined,
+    codCliente === '',
     typeof codCliente !== 'number',
     (!Number.isSafeInteger(codCliente) || codCliente < 1),
-    valor === undefined,
+    valor === '',
     typeof valor !== 'number',
     (!Number.isSafeInteger(valor) || valor < 1)
   ].indexOf(true);

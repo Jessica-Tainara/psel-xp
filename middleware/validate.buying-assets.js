@@ -1,19 +1,19 @@
 const customError = require("../utils/customError");
 
 const createErrors = (key) => [
-  [400, `"${key}" é necessário`],
-  [422, `"${key}" deve ser um número`],
-  [422, `"${key}" deve ser um inteiro maior ou igual a 1`]
+  [400, `"${key}" is required`],
+  [422, `"${key}" must be a number`],
+  [422, `"${key}" must be a greather than or equal 1`]
 ];
 
 const createChecks = (key) => [
-  key === undefined,
+  key === '',
   typeof key !== 'number',
   (!Number.isSafeInteger(key) || key < 1)
 ];
 
 module.exports = (req, _res, next) => {
-  const { codCliente, codAtivo, qtdeAtivo } = req.body;
+  const { codCliente = '', codAtivo = '', qtdeAtivo = '' } = req.body;
 
   const keys = ['codCliente', 'codAtivo', 'qtdeAtivo']
 
