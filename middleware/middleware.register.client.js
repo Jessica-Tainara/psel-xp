@@ -14,7 +14,6 @@ const errors = [
 
 const validateLogin = (req, res, next) => {
   const { email = '', password = '' } = req.body;
-  console.log(email)
   const emailRegex = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
 
   const index = [
@@ -46,7 +45,7 @@ const validateRegister = (req, _res, next) => {
   ].indexOf(true);
 
   const [status, message] = errors[index] || [];
-  console.log(status)
+
   if (status) throw customError(status, message);
 
   return next();
