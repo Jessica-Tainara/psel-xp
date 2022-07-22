@@ -260,3 +260,55 @@ describe('4 - Ao realizar requisição de um ativo por Id', async () => {
   })
 })
 
+describe('5 - Ao realizar requisiçao de ativos por cliente:', async () => {
+  before(async () => {
+    sinon.stub(Account, "findOne").resolves({id: 1});
+    sinon.stub(Client, "findOne").resolves({id: 1})
+    sinon.stub(BuyingAsset, "findAll").resolves(purchases);
+    const findByPk = sinon.stub(Asset, 'findByPk');
+    findByPk.withArgs(1).returns(assets[0]);
+    findByPk.withArgs(2).returns(assets[1]);
+  })
+
+  after(async () => {
+    Client.findOne.restore();
+    Account.findOne.restore();
+    BuyingAsset.findAll.restore();
+    Asset.findByPk.restore();
+  })
+
+  it('Retorna um array de objetos com propriedades de codigo, nome, preço e quantidade do ativo', async () => {
+    const response = await getByClient(1, {email: "teste@test.com"});
+    const assets2 = assets.map((asset) => {
+     const { qtd } = purchases.find((purchase)=> purchase.assetId === asset.codAtivo);
+       return { ...asset, qtdeAtivo: qtd}
+    })
+    expect(response).to.deep.equal(assets2);
+  })
+
+  it('Retorna erro com mensagem "Não autorizado!" e status 401 quando o usuário não for autorizado', async () => {
+    let err;
+    try {
+      const response = await getByClient(2, {email: "teste@test.com"});
+
+    } catch (e) {
+      err = e
+    }
+    expect(err).to.exist
+    expect(err.status).to.be.equal(401);
+    expect(err.message).to.be.equal('Não autorizado!');
+  });
+  it('Retorna erro com mensagem "Cliente não possui ativos" caso cliente não possua ativos', async () => {
+    BuyingAsset.findAll.restore();
+    sinon.stub(BuyingAsset, "findAll").resolves([]);
+    let err;
+    try {
+      const response = await getByClient(1, {email: "teste@test.com"});
+
+    } catch (e) {
+      err = e
+    }
+    expect(err).to.exist
+    expect(err.message).to.be.equal('Esse cliente não possui ativos');
+  })
+});
