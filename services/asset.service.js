@@ -63,6 +63,10 @@ const sell = async (object, {email}) => {
       ... infos,
       transaction: 'Venda de ativos'
     });
+    if (infos.newPurchasedAssets === 0)
+    await BuyingAsset.destroy({ where: { assetId: object.codAtivo } },  
+      { transaction: t })
+  
     await t.commit();
     return { message: 'Venda finalizada com sucesso!' };
 
