@@ -174,3 +174,34 @@ describe('8 - Ao buscar historico de um cliente:', async () => {
   })
 
 })
+
+describe('9 - Ao buscar saldo de um cliente:', async () => {
+  before(async () => {
+    sinon.stub(Account, "findOne").resolves({id: 1, balance: 600.00});
+    sinon.stub(Client, "findOne").resolves({id: 1});
+  })
+
+  after(async () => {
+    Account.findOne.restore();
+    Client.findOne.restore();
+
+  })
+
+  it('Retorna saldo e codigo do cliente', async () => {
+    const response = await balance(1, {email: "teste@test.com"});
+
+    expect(response.codCliente).to.equal(1);
+    expect(response.saldo).to.equal(600.00);
+
+  });
+  it('Retorna um erro com mensagem "Não autorizado!" quando o usuario não for autorizado', async () => {
+    let err;
+    try {
+
+      const response = await balance(2, {email: "teste@test.com"});
+    } catch (e) {
+      err = e
+    }
+    expect(err.message).to.equal('Não autorizado!');
+  });
+});
