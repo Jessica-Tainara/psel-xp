@@ -8,7 +8,7 @@ const jwtConfig = {
   algorithm: 'HS256',
 };
 
-const generateJWTToken = (payload) => 
+const generateJWTToken = (payload) =>
   jwt.sign(payload, SECRET, jwtConfig);
 
 const authenticateToken = async (token) => {
@@ -18,7 +18,7 @@ const authenticateToken = async (token) => {
   } catch (e) {
     console.log('error', e.message);
     return undefined;
-  } 
+  }
 };
 
 module.exports = {
