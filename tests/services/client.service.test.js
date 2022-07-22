@@ -136,3 +136,41 @@ describe('7 - Ao realizar um saque:', async () => {
   })
 
 })
+describe('8 - Ao buscar historico de um cliente:', async () => {
+  before(async () => {
+
+    sinon.stub(Account, "findOne").resolves({id: 1, balance: 600.00});
+    sinon.stub(Client, "findOne").resolves({id: 1});
+    sinon.stub(History, "findAll").resolves(historico);
+  });
+
+  after(async () => {
+    Account.findOne.restore();
+    Client.findOne.restore();
+    History.findAll.restore();
+
+  })
+
+  it('Retorna um array de objetos com com codigo, tipo, valor e detalhes da transação', async () => {
+    const response = await history(1, {email: "teste@test.com"});
+
+    expect(response).to.deep.equal(historico);
+    expect(response[0].tipoTransacao).to.equal('depósito');
+    expect(response[0].valor).to.equal(250.00);
+    expect(response[0].detalhes).to.equal('');
+
+  });
+  it('Retorna uma mensagem de erro quando o usuario não for autorizado', async () => {
+    let err;
+    try {
+
+      const response = await history(2, {email: "teste@test.com"});
+    } catch (e) {
+      err = e
+    }
+    expect(err.message).to.equal('Não autorizado!');
+
+
+  })
+
+})
