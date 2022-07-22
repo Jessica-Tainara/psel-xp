@@ -8,6 +8,7 @@ const {
   balance,
   register
 } = require('../../services/client.service');
+const { authentication } = require('../../services/auth.service');
 const { Client, Account, History } = require('../../models');
 
 const historico = [
@@ -244,5 +245,39 @@ describe('10 - Ao registrar um cliente:', async () => {
       err = e
     }
     expect(err.message).to.equal('Não foi possível finalizar o cadastro');
+  });
+});
+describe('11 - Ao fazer login:', async () => {
+  before(async () => {
+    sinon.stub(Client, "findOne").resolves({
+      id: 5,
+      email: "test@gmail.com",
+      fullName: "Jessica"
+    });
+  });
+
+  after(async () => {
+    Client.findOne.restore();
+  })
+
+  it('Retorna codigo do cliente e token de autenticação quando concluído', async () => {
+    const response = await authentication({email: "teste@test.com", password: "123456"});
+
+    expect(response.codCliente).to.equal(5);
+    expect(response.token).to.exists;
+
+  });
+
+  it('Retorna uma mensagem de erro quando cliente não existir no banco de dados ou as informações dadas estiverem incorretas', async () => {
+    Client.findOne.restore();
+    sinon.stub(Client, "findOne").resolves()
+    let err;
+    try {
+
+      const response = await authentication({email: "teste@test.com", password: "123456"});
+    } catch (e) {
+      err = e
+    }
+    expect(err.message).to.equal('Invalid  fields');
   });
 });
