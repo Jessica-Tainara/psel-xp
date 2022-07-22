@@ -8,9 +8,12 @@ module.exports = async (req, res, next) => {
 
   const payload = await authenticateToken(token);
 
-  const message = errors[[!token, !payload].indexOf(true)];
-  
-  if(message) throw customError(401, message);
+  const message = errors[[
+    ! token,
+    ! payload
+  ].indexOf(true)];
+
+  if (message) throw customError(401, message);
 
   res.locals.payload = payload;
 
