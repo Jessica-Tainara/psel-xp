@@ -217,3 +217,46 @@ describe('2 - Ao realizar uma venda de ativos:', async () => {
   })
 });
 
+describe('3 - Ao realizar a requisição de todos os ativos disponiveis na corretora:', async () => {
+  before(async () => {
+    sinon.stub(Asset, "findAll").resolves(assets);
+  })
+
+  after(async () => {
+    Asset.findAll.restore();
+  })
+
+  it('Retorna um array de objetos com propriedades de codigo, nome, preço e quantidade do ativo', async () => {
+    const response = await getAll();
+    expect(response).to.be.equal(assets);
+  })
+});
+
+
+describe('4 - Ao realizar requisição de um ativo por Id', async () => {
+  before(async () => {
+    const findByPk = sinon.stub(Asset, "findByPk");
+    findByPk.withArgs(1).resolves(assets[0]);
+    findByPk.withArgs(5).resolves();
+  })
+
+  after(async () => {
+    Asset.findByPk.restore();
+  })
+
+  it('Retorna um objeto com propriedades de código, nome, quantidade e preço do ativo', async () => {
+    const response = await getById(1);
+    expect(response).to.be.equal(assets[0]);
+  })
+  it('Retorna erro com mensagem "Ativo não encontrado!" caso ativo não exista', async () => {
+    let err;
+    try{
+      const response = await getById(5);
+    }catch(e){
+       err = e;
+    }
+    expect(err).to.be.exist;
+    expect(err.message).to.be.equal('Ativo não encontrado!');
+  })
+})
+
