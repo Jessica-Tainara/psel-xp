@@ -205,3 +205,44 @@ describe('9 - Ao buscar saldo de um cliente:', async () => {
     expect(err.message).to.equal('Não autorizado!');
   });
 });
+
+describe('10 - Ao registrar um cliente:', async () => {
+  before(async () => {
+
+    sinon.stub(Account, "create").resolves({id: 5, balance: 0.00});
+    sinon.stub(Client, "create").resolves({id: 5});
+    sinon.stub(Client, "findOne").resolves({
+      id: 5,
+      fullName: "Jessica"
+    });
+  });
+
+  after(async () => {
+    Account.create.restore();
+    Client.create.restore();
+    Client.findOne.restore();
+
+  })
+
+  it('Retorna codigo e saldo do cliente, e token de autenticação quando concluído', async () => {
+    const response = await register({fullName: "Jessica", email: "teste@test.com", password: "123456"});
+
+    expect(response.codCliente).to.equal(5);
+    expect(response.saldo).to.equal(0.00);
+    expect(response.token).to.exists;
+
+  });
+
+  it('Retorna uma mensagem de erro quando não for possível completar o cadastro', async () => {
+    Client.create.restore();
+    sinon.stub(Client, "create").throws(new Error(''))
+    let err;
+    try {
+
+      const response = await register({fullName: "Jessica", email: "teste@test.com", password: "123456"});
+    } catch (e) {
+      err = e
+    }
+    expect(err.message).to.equal('Não foi possível finalizar o cadastro');
+  });
+});
