@@ -1,0 +1,32 @@
+version: '3.1'
+
+services:
+  mysql:
+    image: mysql:5.7
+    container_name: container_mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+    ports:
+      - 3310:3306
+
+  api:
+    container_name: api
+    image: node:16
+    restart: always
+    ports:
+      - 3000:3000
+    environment:
+      - DB_HOST=mysql
+      - DB_NAME=psel_xp
+      - DB_USER=root
+      - DB_PASSWORD=root
+      - PORT=3000
+    volumes:
+      - ./:/usr/app
+    working_dir: /usr/app
+    command: npm run debug
+    # As duas opções abaixo correspondem ao -it
+    tty: true # -t
+    stdin_open: true #-i 
+    depends_on:
+      - mysql
