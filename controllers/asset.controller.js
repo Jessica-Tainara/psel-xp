@@ -39,122 +39,34 @@ assetRouter.get('/conta/:id', authMiddleware, async (req, res) => {
  *       description: Endpoint de ativos
  */
 
-/**
- * @swagger
- *  components:
- *      schemas:
- *          Ativo:
- *                type: object
- *                properties:
- *                     codAtivo:
- *                       type: number
- *                     nomeAtivo: 
- *                       type: string
- *                     qtdeAtivo : 
- *                       type: number
- *                     valor :
- *                       type: number
- */
 
 /**
  * @swagger
- *  /ativos/comprar:
- *          post:
+ *  /ativos:
+ *          get:
  *            tags: [Ativos]
- *            description: Endpoint para fazer deposito
- *            security:
- *              - bearerAuth: []
- *            requestBody:
- *              required: true
- *              content:
- *                application/json:
- *                  schema:
- *                    type: object
- *                    properties:
- *                      codCliente:
- *                        type: number
- *                      codAtivo:
- *                        type: number
- *                      qtdeAtivo:
- *                        type: number
- *                    example:
- *                      codCliente: 1
- *                      codAtivo: 5
- *                      qtdeAtivo: 8
+ *            description: Endpoint retorna uma lista de ativos
  *            responses:
- *              201:
+ *              200:
  *                content:
  *                  application/json:
  *                    schema:
- *                      type: object
- *                      properties:
- *                        message:
- *                          type: string
- *                      example:
- *                        message: Compra finalizada com sucesso!
- *                  
- */
-
-/**
- * @swagger
- *  /ativos/vender:
- *          post:
- *            tags: [Ativos]
- *            description: Endpoint para fazer deposito
- *            security:
- *              - bearerAuth: []
- *            requestBody:
- *              required: true
- *              content:
- *                application/json:
- *                  schema:
- *                    type: object
- *                    properties:
- *                      codCliente:
- *                        type: number
- *                      codAtivo:
- *                        type: number
- *                      qtdeAtivo:
- *                        type: number
- *                    example:
- *                      codCliente: 1
- *                      codAtivo: 5
- *                      qtdeAtivo: 8
- *            responses:
- *              201:
- *                content:
- *                  application/json:
- *                    schema:
- *                      type: object
- *                      properties:
- *                        message:
- *                          type: number
- *                      example:
- *                        message: Venda finalizada com sucesso!
- *                  
- */
-
-/**
- * @swagger
- *  /ativos/conta/{codCliente}:
- *    get:
- *        tags: [Ativos]
- *        description: Endpoint retorna um ativo por cliente
- *        security:
- *          - bearerAuth: []
- *        parameters:
- *          - name: codCliente
- *            in: path
- *            type: number
- *            required: true
- *        responses:
- *          200:
- *           content:
- *             application/json:
- *               schema:
- *                 type: array
- *                 items:
- *                   $ref: '#/components/schemas/Ativo'
+ *                      type: array
+ *                      items:
+ *                        properties:
+ *                         codAtivo:
+ *                            type: number
+ *                         nomeAtivo:
+ *                           type: string
+ *                         valor:
+ *                           type: number
+ *                         qtdeAtivo:
+ *                           type: number
+ *                        example:
+ *                          codAtivo: 1
+ *                          nameAtivo: JTSA
+ *                          valor: 100.50
+ *                          qtdeAtivo: 150
  */
 
 /**
@@ -170,27 +82,195 @@ assetRouter.get('/conta/:id', authMiddleware, async (req, res) => {
  *            required: true
  *        responses:
  *          200:
+ *           description: Se o ativo for encontrado
  *           content:
  *             application/json:
  *               schema:
  *                 type: object
- *                 $ref: '#/components/schemas/Ativo'
+ *                 properties:
+ *                   codAtivo:
+ *                     type: number
+ *                   nomeAtivo:
+ *                     type: string
+ *                   valor:
+ *                     type: number
+ *                   qtdeAtivo:
+ *                      type: number
+ *                 example:
+ *                   codAtivo: 1
+ *                   nameAtivo: JTSA
+ *                   valor: 100.50
+ *                   qtdeAtivo: 150
+ *          404:
+ *           description: Se o ativo não for encontrado
+ *           content:
+ *             application/json:
+ *               schema:
+ *                 type: object
+ *                 properties:
+ *                   message:
+ *                     type: string
+ *                 example:
+ *                   message: Ativo não encontrado!
+ */
+/**
+ * @swagger
+ *  /ativos/comprar:
+ *          post:
+ *            tags: [Ativos]
+ *            description: Endpoint para compra de ativos. * Atente-se em usar o token e o código do cliente dado no endpoint de login ou de registro
+ *            security:
+ *              - bearerAuth: []
+ *            requestBody:
+ *              required: true
+ *              content:
+ *                application/json:
+ *                  schema:
+ *                    type: object
+ *                    properties:
+ *                      codCliente:
+ *                        type: number
+ *                      codAtivo:
+ *                        type: number
+ *                      qtdeAtivo:
+ *                        type: number
+ *                    example:
+ *                      codCliente: 1
+ *                      codAtivo: 5
+ *                      qtdeAtivo: 8
+ *            responses:
+ *              201:
+ *                description: Se a compra for realizada
+ *                content:
+ *                  application/json:
+ *                    schema:
+ *                      type: object
+ *                      properties:
+ *                        message:
+ *                          type: string
+ *                      example:
+ *                        message: Compra finalizada com sucesso!
+ *              -:
+ *                description: Se a quantidade de ativos na corretora for insuficiente
+ *                content:
+ *                  application/json:
+ *                    schema:
+ *                      type: object
+ *                      properties:
+ *                        message:
+ *                          type: string
+ *                      example:
+ *                        message: Quantidade de ativos disponível:0
+ *              :
+ *                description: Se o saldo disponível na carteira for insuficiente
+ *                content:
+ *                  application/json:
+ *                    schema:
+ *                      type: object
+ *                      properties:
+ *                        message:
+ *                          type: string
+ *                      example:
+ *                        message: Saldo insuficiente
  */
 
 /**
  * @swagger
- *  /ativos:
- *          get:
+ *  /ativos/vender:
+ *          post:
  *            tags: [Ativos]
- *            description: Endpoint retorna uma lista de ativos
+ *            description: Endpoint para venda de ativos
+ *            security:
+ *              - bearerAuth: []
+ *            requestBody:
+ *              required: true
+ *              content:
+ *                application/json:
+ *                  schema:
+ *                    type: object
+ *                    properties:
+ *                      codCliente:
+ *                        type: number
+ *                      codAtivo:
+ *                        type: number
+ *                      qtdeAtivo:
+ *                        type: number
+ *                    example:
+ *                      codCliente: 1
+ *                      codAtivo: 5
+ *                      qtdeAtivo: 8
  *            responses:
- *              200:
+ *              201:
+ *                description: Se a venda for realizada
  *                content:
  *                  application/json:
  *                    schema:
- *                      type: array
- *                      items:
- *                        $ref: '#/components/schemas/Ativo'
+ *                      type: object
+ *                      properties:
+ *                        message:
+ *                          type: string
+ *                      example:
+ *                        message: Venda finalizada com sucesso!
+ *              :
+ *                description: Se a quantidade de ativos na carteira for insuficiente
+ *                content:
+ *                  application/json:
+ *                    schema:
+ *                      type: object
+ *                      properties:
+ *                        message:
+ *                          type: string
+ *                      example:
+ *                        message: Quantidade disponível desse ativo para venda:0
  */
+
+/**
+ * @swagger
+ *  /ativos/conta/{codCliente}:
+ *    get:
+ *        tags: [Ativos]
+ *        description: Endpoint retorna ativos por cliente
+ *        security:
+ *          - bearerAuth: []
+ *        parameters:
+ *          - name: codCliente
+ *            in: path
+ *            type: number
+ *            required: true
+ *        responses:
+ *          200:
+ *           description: Se o cliente possuir ativos na carteira
+ *           content:
+ *             application/json:
+ *               schema:
+ *                 type: array
+ *                 items:
+ *                    properties:
+ *                       codAtivo:
+ *                          type: number
+ *                       nomeAtivo:
+ *                         type: string
+ *                       valor:
+ *                         type: number
+ *                       qtdeAtivo:
+ *                         type: number
+ *                    example:
+ *                      codAtivo: 1
+ *                      nameAtivo: JTSA
+ *                      valor: 100.50
+ *                      qtdeAtivo: 150
+ *          :
+ *           description: Se o cliente não possuir ativos na carteira
+ *           content:
+ *             application/json:
+ *               schema:
+ *                 type: object
+ *                 properties:
+ *                   message:
+ *                     type: string
+ *                 example:
+ *                   message: Esse cliente não possui ativos
+ */
+
 
 module.exports = assetRouter;

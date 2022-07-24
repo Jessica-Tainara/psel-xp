@@ -3,7 +3,8 @@ const swaggerConfig = {
         openapi: "3.0.1",
         info: {
             title: "Processo seletivo XP",
-            description: "API conectada a um banco de dados",
+            description: `Esta API fornece ao cliente acesso aos ativos da corretora e a detalhes de sua conta.
+            [Repositório GitHub](https://github.com/Jessica-Tainara/psel-xp)`,
             version: "1.0"
         },
         servers: [{

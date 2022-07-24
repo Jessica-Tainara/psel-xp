@@ -15,7 +15,7 @@ authentication = async ({ email, password }) => {
   });
 
   if (!client) 
-    throw customError(400, 'Invalid  fields');
+    throw customError(400, 'Dados inválidos');
 
   const token = generateJWTToken({
     email: client.email,

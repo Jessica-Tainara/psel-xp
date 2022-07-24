@@ -31,7 +31,7 @@ clientRouter.get('/historico/:id', authMiddleware, async (req, res) => {
  * @swagger
  *  tags:
  *       name: Cliente
- *       description: Endpoint de clientes
+ *       description: Endpoint cliente
  */
 
 /**
@@ -54,7 +54,7 @@ clientRouter.get('/historico/:id', authMiddleware, async (req, res) => {
  *                      fullName:
  *                        type: string
  *                    example:
- *                      email: jhg@test.com
+ *                      email: seuemail@test.com
  *                      password: password
  *                      fullName: Jessica Tainara
  *            responses:
@@ -71,7 +71,17 @@ clientRouter.get('/historico/:id', authMiddleware, async (req, res) => {
  *                      example:
  *                        codClient: 1
  *                        token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Implc3NpY2FAdGVzdC5jb20iLCJmdWxsTmFtZSI6Ikplc3NpY2EiLCJpYXQiOjE2NTg2NDAwNTksImV4cCI6MTY1ODY1NDQ1OX0.gBbIYaNJ9IZa5ESVkdfleYofD19u3yVNSVxWFBlwmhY"
- *                  
+ *              :
+ *                description: Se o e-mail já estiver cadastrado no banco de dados ou ocorrer algum outro problema durante o cadastro
+ *                content:
+ *                  application/json:
+ *                    schema:
+ *                      type: object
+ *                      properties:
+ *                        message:
+ *                          type: string
+ *                      example:
+ *                        message: Não foi posível finalizar o cadastro!
  */
 
 /**
@@ -108,7 +118,16 @@ clientRouter.get('/historico/:id', authMiddleware, async (req, res) => {
  *                      example:
  *                        codClient: 1
  *                        token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Implc3NpY2FAdGVzdC5jb20iLCJmdWxsTmFtZSI6Ikplc3NpY2EiLCJpYXQiOjE2NTg2NDAwNTksImV4cCI6MTY1ODY1NDQ1OX0.gBbIYaNJ9IZa5ESVkdfleYofD19u3yVNSVxWFBlwmhY"
- *                  
+ *              :
+ *                content:
+ *                  application/json:
+ *                    schema:
+ *                      type: object
+ *                      properties:
+ *                        message:
+ *                          type: string
+ *                      example:
+ *                        message: Dados inválidos
  */
 
 /**
@@ -184,6 +203,16 @@ clientRouter.get('/historico/:id', authMiddleware, async (req, res) => {
  *                      example:
  *                        message: Saque finalizado com sucesso!
  *                        saldo: 1500.00
+ *              :
+ *                content:
+ *                  application/json:
+ *                    schema:
+ *                      type: object
+ *                      properties:
+ *                        message:
+ *                          type: string
+ *                      example:
+ *                        message: Saldo insuficiente!
  *                  
  */
 
@@ -192,7 +221,7 @@ clientRouter.get('/historico/:id', authMiddleware, async (req, res) => {
  *  /conta/saldo/{codCliente}:
  *          get:
  *            tags: [Cliente]
- *            description: Endpoint para fazer deposito
+ *            description: Endpoint para consulta de saldo
  *            parameters:
  *              - name: codCliente
  *                in: path
@@ -201,7 +230,7 @@ clientRouter.get('/historico/:id', authMiddleware, async (req, res) => {
  *            security:
  *              - bearerAuth: []
  *            responses:
- *              201:
+ *              200:
  *                content:
  *                  application/json:
  *                    schema:
@@ -222,7 +251,7 @@ clientRouter.get('/historico/:id', authMiddleware, async (req, res) => {
  *  /conta/historico/{codCliente}:
  *          get:
  *            tags: [Cliente]
- *            description: Endpoint para fazer deposito
+ *            description: Endpoint que retorna lista de transações do cliente
  *            parameters:
  *              - name: codCliente
  *                in: path
@@ -231,7 +260,7 @@ clientRouter.get('/historico/:id', authMiddleware, async (req, res) => {
  *            security:
  *              - bearerAuth: []
  *            responses:
- *              201:
+ *              200:
  *                content:
  *                  application/json:
  *                    schema:
