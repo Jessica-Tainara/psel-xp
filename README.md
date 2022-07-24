@@ -6,10 +6,11 @@ Documentação da API : https://psel-xp-api.herokuapp.com/docs/#/
 
 <br />
 
-# Ferramentas utilizadas
+# Linguagens e ferramentas utilizadas
 
 <ul>
-<li>Express</li>
+<li>Node.js</li>
+<li>Javascript</li>
 <li>Sequelize</li>
 <li>JWT</li>
 <li>Swagger</li>
