@@ -277,6 +277,6 @@ describe('11 - Ao fazer login:', async () => {
     } catch (e) {
       err = e
     }
-    expect(err.message).to.equal('Invalid  fields');
+    expect(err.message).to.equal('Dados inválidos');
   });
 });
