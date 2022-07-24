@@ -27,7 +27,7 @@ const historico = [
 ]
 describe('6 - Ao realizar um deposito:', async () => {
   before(async () => {
-    sinon.stub(Account, "findOne").resolves({ id: 1 });
+    sinon.stub(Account, "findOne").resolves({ id: 1, balance: 500 });
     sinon.stub(Account, "update").resolves();
     sinon.stub(History, "create").resolves()
   })
@@ -39,10 +39,12 @@ describe('6 - Ao realizar um deposito:', async () => {
 
   })
 
-  it('Retorna uma mensagem de sucesso quando concluido', async () => {
+  it('Retorna codigo do cliente, valor do depósito e saldo quando concluido', async () => {
     const response = await deposit({codCliente: 1, valor: 500.00});
 
-    expect(response.message).to.equal('Depósito finalizado com sucesso!');
+    expect(response.codCliente).to.be.equal(1);
+    expect(response.valor).to.equal(500);
+    expect(response.saldo).to.equal(1000);
 
   });
 
@@ -78,13 +80,15 @@ describe('7 - Ao realizar um saque:', async () => {
 
   })
 
-  it('Retorna uma mensagem de sucesso quando concluido', async () => {
+  it('Retorna codigo do cliente, valor do depósito e saldo quando concluido', async () => {
     const response = await withdraw({
       codCliente: 1,
       valor: 500.00
     }, {email: "teste@test.com"});
 
-    expect(response.message).to.equal('Saque finalizado com sucesso!');
+    expect(response.codCliente).to.be.equal(1);
+    expect(response.valor).to.equal(500);
+    expect(response.saldo).to.equal(100);
 
   });
   it('Retorna um erro com a mensagem "Não autorizado!" quando o usuario não for autorizado', async () => {

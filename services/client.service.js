@@ -25,7 +25,7 @@ const deposit = async ({ codCliente: clientId, valor }) => {
 
     await t.commit();
 
-    return { message: 'Depósito finalizado com sucesso!', balance: Number(balance) + valor };
+    return { codCliente: clientId, valor, saldo: Number(balance) + valor };
 
   } catch (e) {
     await t.rollback();
@@ -56,7 +56,7 @@ const withdraw = async ({ codCliente: clientId, valor }, { email }) => {
 
     await t.commit();
 
-    return { message: 'Saque finalizado com sucesso!', balance: Number(balance) - valor };
+    return { codCliente: clientId, valor, saldo: Number(balance) - valor };
 
   } catch (e) {
     await t.rollback();

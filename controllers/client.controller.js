@@ -157,13 +157,16 @@ clientRouter.get('/historico/:id', authMiddleware, async (req, res) => {
  *                    schema:
  *                      type: object
  *                      properties:
- *                        message:
+ *                        codCliente:
+ *                          type: number
+ *                        valor:
  *                          type: number
  *                        saldo:
  *                          type: number
  *                      example:
- *                        mesage: Depósito finalizado com sucesso!
- *                        saldo: 3000.00
+ *                        codCliente: 1
+ *                        valor: 500.00
+ *                        saldo: 2500
  *                  
  */
 
@@ -196,13 +199,16 @@ clientRouter.get('/historico/:id', authMiddleware, async (req, res) => {
  *                    schema:
  *                      type: object
  *                      properties:
- *                        message:
- *                          type: string
+ *                        codCliente:
+ *                          type: number
+ *                        valor:
+ *                          type: number
  *                        saldo:
  *                          type: number
  *                      example:
- *                        message: Saque finalizado com sucesso!
- *                        saldo: 1500.00
+ *                        codCliente: 1
+ *                        valor: 500.00
+ *                        saldo: 3000.5
  *              :
  *                content:
  *                  application/json:
