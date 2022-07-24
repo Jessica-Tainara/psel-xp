@@ -13,6 +13,7 @@ Documentação da API : https://psel-xp-api.herokuapp.com/docs/#/
 <li>Javascript</li>
 <li>Sequelize</li>
 <li>JWT</li>
+<li>Supabase</li>
 <li>Swagger</li>
 <li>Heroku</li>
 <li>Mocha</li>
@@ -51,6 +52,6 @@ Documentação da API : https://psel-xp-api.herokuapp.com/docs/#/
 # Testes
 
 Foram implementados neste projeto testes unitários somente da camada service e das middlewares de validação.
- > Para rodar os testes, execute o comando `npm test`. Lembre-se que a aplicação deve estar rodando. <strong>Obs:</strong> Se estiver rodando a aplicação pelo docker, este comando também deve ser executado no CLI do container api.
+ >  Para rodar os testes, execute o comando `npm test`. Não é necessário estar rodando a aplicação
   <br>
 
