@@ -148,8 +148,17 @@ assetRouter.get('/conta/:id', authMiddleware, async (req, res) => {
  *                      properties:
  *                        message:
  *                          type: string
+ *                        codCliente:
+ *                          type: number
+ *                        codAtivo:
+ *                          type: number
+ *                        qtdeAtivo:
+ *                          type: number
  *                      example:
  *                        message: Compra finalizada com sucesso!
+ *                        codCliente: 1
+ *                        codAtivo: 1
+ *                        qtdeAtivo: 10
  *              -:
  *                description: Se a quantidade de ativos na corretora for insuficiente
  *                content:
@@ -196,8 +205,8 @@ assetRouter.get('/conta/:id', authMiddleware, async (req, res) => {
  *                      qtdeAtivo:
  *                        type: number
  *                    example:
- *                      codCliente: 1
- *                      codAtivo: 5
+ *                      codCliente: 1 
+ *                      codAtivo: 5 
  *                      qtdeAtivo: 8
  *            responses:
  *              201:
@@ -209,8 +218,17 @@ assetRouter.get('/conta/:id', authMiddleware, async (req, res) => {
  *                      properties:
  *                        message:
  *                          type: string
+ *                        codCliente:
+ *                          type: number
+ *                        codAtivo:
+ *                          type: number
+ *                        qtdeAtivo:
+ *                          type: number
  *                      example:
  *                        message: Venda finalizada com sucesso!
+ *                        codCliente: 1
+ *                        codAtivo: 1
+ *                        qtdeAtivo: 10
  *              :
  *                description: Se a quantidade de ativos na carteira for insuficiente
  *                content:

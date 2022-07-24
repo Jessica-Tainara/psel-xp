@@ -38,7 +38,7 @@ const buy = async ({ codCliente, codAtivo, qtdeAtivo }, { email }) => {
       transaction: 'Compra de ativos'
     });
     await t.commit();
-    return { message: 'Compra finalizada com sucesso!' };
+    return { message: 'Compra finalizada com sucesso!', codCliente, codAtivo, qtdeAtivo };
   } catch (e) {
     await t.rollback();
     console.log(e.message);
@@ -68,7 +68,7 @@ const sell = async (object, {email}) => {
       { transaction: t })
   
     await t.commit();
-    return { message: 'Venda finalizada com sucesso!' };
+    return { message: 'Venda finalizada com sucesso!', ...object };
 
   } catch (e) {
     await t.rollback();
