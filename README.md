@@ -53,9 +53,9 @@ Deploy : https://psel-xp-api.herokuapp.com
 
 # Autenticação
 
-Pensando na necessidade de segurança de acesso em uma API real, as rotas de <strong>saque, compra de ativos, vendas de ativos, consulta de saldo, busca de ativos por cliente, e histórico de transações do cliente</strong> são autenticadas e requerem o token de autenticação dados na rotas de registro ou de login. Esse token deve ser passado nos headers da requisição na chave `authorization`. Se atente também em utilizar o código de cliente correto que também é retornado nas rotas de registro ou login. 
+Pensando na necessidade de segurança de acesso em uma API real, as rotas de <strong>saque, compra de ativos, venda de ativos, consulta de saldo, busca de ativos por cliente, e histórico de transações do cliente</strong> são autenticadas e requerem o token de autenticação dado nas rotas de registro ou de login. Esse token deve ser passado nos headers da requisição na chave `authorization`. Se atente também em utilizar o código de cliente correto que também é retornado nas rotas de registro ou login. 
 
-<strong>Um e-mail pode ser cadastrado um única vez no banco de dados da aplicação, caso não consiga finalizar o cadastro de um cliente, tente alterá-lo</strong>
+<strong>Um e-mail pode ser cadastrado um única vez no banco de dados da aplicação, caso não consiga finalizar o cadastro de um cliente, tente alterá-lo!</strong>
 
 # Testes
 
