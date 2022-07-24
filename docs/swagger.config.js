@@ -7,7 +7,7 @@ const swaggerConfig = {
             version: "1.0"
         },
         servers: [{
-            url:"https://psel-xp-jessica-tainara.herokuapp.com/ativoshttps://psel-xp-jessica-tainara.herokuapp.com/",
+            url:"https://psel-xp-api.herokuapp.com/",
             description: "servidor web"
         }],
         components: {
