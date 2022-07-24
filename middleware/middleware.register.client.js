@@ -23,7 +23,7 @@ const validateLogin = (req, res, next) => {
     String(password).length < 6
   ].indexOf(true);
 
-  const [status, message] = errorsLogin[index];
+  const [status, message] = errorsLogin[index] || [];
 
   if (status) throw customError(status, message);
 
@@ -47,7 +47,7 @@ const validateRegister = (req, _res, next) => {
   const [status, message] = errors[index] || [];
 
   if (status) throw customError(status, message);
-
+console.log('foi')
   return next();
 };
 
