@@ -44,7 +44,7 @@ Documentação da API : https://psel-xp-api.herokuapp.com/docs/#/
   > Renomeie o arquivo `.env.example para` `.env` e preencha a variável `JWT_SECRET`<br>
 
   > Abra o CLI do container api com o comando `docker exec -it api bash`<br>
- <br>
+
   > Execute os comandos `npx sequelize-cli db:create`, `npx sequelize-cli db:migrate` e `npx sequelize-cli db:seed:all`<br>
 
 # Testes
