@@ -4,6 +4,8 @@ Esta é uma API que simula ao usuário acesso aos ativos de uma corretora e a de
 
 Documentação da API(Swagger) : https://psel-xp-api.herokuapp.com/docs/#/
 
+Deploy : https://psel-xp-api.herokuapp.com
+
 <br />
 
 # Linguagens e ferramentas utilizadas
