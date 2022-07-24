@@ -4,9 +4,7 @@
   "description": "",
   "main": "server.js",
   "scripts": {
-    "start": "node server.js",
-    "debug": "nodemon .",
-    "test": "mocha ./tests/**/*.test.js --exit"
+    "start": "node server.js"
   },
   "repository": {
     "type": "git",
