@@ -225,11 +225,10 @@ describe('10 - Ao registrar um cliente:', async () => {
 
   })
 
-  it('Retorna codigo e saldo do cliente, e token de autenticação quando concluído', async () => {
+  it('Retorna código do cliente e token de autenticação quando concluído', async () => {
     const response = await register({fullName: "Jessica", email: "teste@test.com", password: "123456"});
 
     expect(response.codCliente).to.equal(5);
-    expect(response.saldo).to.equal(0.00);
     expect(response.token).to.exists;
 
   });
