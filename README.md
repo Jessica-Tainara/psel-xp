@@ -1,8 +1,8 @@
 # Boas-vindas!
 
-Esta é uma API que fornece ao cliente acesso aos ativos da corretora e a detalhes de sua conta.
+Esta é uma API que simula ao usuário acesso aos ativos de uma corretora e a detalhes de sua conta.
 
-Documentação da API : https://psel-xp-api.herokuapp.com/docs/#/
+Documentação da API(Swagger) : https://psel-xp-api.herokuapp.com/docs/#/
 
 <br />
 
@@ -30,7 +30,7 @@ Documentação da API : https://psel-xp-api.herokuapp.com/docs/#/
 
 # Orientações de como rodar o projeto
  ## 👉 Sem Docker
-  > Após clonar o projeto, execute o comando `npm install`.<br>
+  > Após clonar o projeto, entre no diretório do projeto e execute o comando `npm install`.<br>
   
   > Renomeie o arquivo `.env.example` para `.env` e preencha as variáveis <br>
 
@@ -39,7 +39,7 @@ Documentação da API : https://psel-xp-api.herokuapp.com/docs/#/
   > Execute `npm start` para rodar a aplicação<br>
   
   ## 👉 Com Docker
-  > Após clonar o projeto, execute o comando `npm install`. <br> 
+  > Após clonar o projeto, entre no diretório do projeto e execute o comando `npm install`. <br> 
 
   > Execute `docker-compose up` <br>
 
@@ -49,9 +49,14 @@ Documentação da API : https://psel-xp-api.herokuapp.com/docs/#/
 
   > Execute os comandos `npx sequelize-cli db:create`, `npx sequelize-cli db:migrate` e `npx sequelize-cli db:seed:all`<br>
 
+# Autenticação
+
+Pensando na necessidade de segurança de acesso em uma API real, as rotas de <strong>saque, compra de ativos, vendas de ativos, consulta de saldo, busca de ativos por cliente, e histórico de transações do cliente</strong> são autenticadas e requerem o token de autenticação dados na rotas de registro ou de login. Esse token deve ser passado nos headers da requisição na chave `authorization`. Se atente também em utilizar o código de cliente correto que também é retornado nas rotas de registro ou login. 
+
+<strong>Um e-mail pode ser cadastrado um única vez no banco de dados da aplicação, caso não consiga finalizar o cadastro de um cliente, tente alterá-lo</strong>
+
 # Testes
 
 Foram implementados neste projeto testes unitários somente da camada service e das middlewares de validação.
  >  Para rodar os testes, execute o comando `npm test`. Não é necessário estar rodando a aplicação
   <br>
-
